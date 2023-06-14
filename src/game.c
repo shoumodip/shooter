@@ -1,10 +1,11 @@
 #include "game.h"
+#include <stddef.h>
 
 #define RAND_A 6364136223846793005ULL
 #define RAND_C 1442695040888963407ULL
 
 static int rand(int low, int high) {
-  static long rand_state = 0;
+  static long long rand_state = 0;
   rand_state = rand_state * RAND_A + RAND_C;
   return ((rand_state >> 32) % (high - low + 1)) + low;
 }
@@ -173,11 +174,25 @@ typedef struct {
 Game game;
 
 void gameInit(int w, int h) {
-  game = (Game){0};
-  game.heal.delay = HEAL_DELAY;
-  game.shoot.delay = SHOOT_DELAY;
-  game.spawn.delay = SPAWN_DELAY;
   game.player.life = PLAYER_LIFE;
+  game.player.position = (Vec){0};
+  game.player.velocity = (Vec){0};
+
+  game.bullets.count = 0;
+  game.bullets.freed = 0;
+
+  game.enemies.count = 0;
+  game.enemies.freed = 0;
+
+  game.heal.left = 0;
+  game.heal.delay = HEAL_DELAY;
+
+  game.shoot.left = 0;
+  game.shoot.delay = SHOOT_DELAY;
+
+  game.spawn.left = 0;
+  game.spawn.delay = SPAWN_DELAY;
+
   gameResize(w, h);
 }
 
