@@ -1,6 +1,32 @@
 #include "game.h"
 #include <stdbool.h>
 
+static const char *itoa(char *buf, int n) {
+  int size;
+  if (n == 0) {
+    size = 1;
+  } else {
+    size = 0;
+    for (int i = n; i != 0; i /= 10) {
+      size += 1;
+    }
+  }
+
+  int end = size - 1;
+  if (n == 0) {
+    buf[end] = '0';
+  } else {
+    while (n != 0) {
+      buf[end] = '0' + n % 10;
+      end -= 1;
+      n /= 10;
+    }
+  }
+
+  buf[size] = '\0';
+  return buf;
+}
+
 #define RAND_A 6364136223846793005ULL
 #define RAND_C 1442695040888963407ULL
 
@@ -162,6 +188,7 @@ void spritesFree(Sprites *s, int index) {
 }
 
 typedef struct {
+  int score;
   Vec screen;
   bool paused;
   bool started;
@@ -177,6 +204,7 @@ typedef struct {
 Game game;
 
 void gameInit(void) {
+  game.score = 0;
   game.paused = !game.started;
 
   game.player.life = PLAYER_LIFE;
@@ -215,8 +243,11 @@ void gameRender(void) {
   spriteDraw(&game.player, game.player.position, game.screen, PLAYER_SIZE,
              PLAYER_COLOR);
 
+  char score[32];
+  platformDrawText(0, 0, itoa(score, game.score), false);
+
   for (int i = 0; i < game.player.life; ++i) {
-    platformDrawCircle(BULLET_SIZE * (i * 3 + 2), BULLET_SIZE * 2, BULLET_SIZE,
+    platformDrawCircle(BULLET_SIZE * (i * 3 + 2), BULLET_SIZE * 5, BULLET_SIZE,
                        PLAYER_COLOR);
   }
 
@@ -226,11 +257,11 @@ void gameRender(void) {
     platformDrawRect(0, 0, w, h, SHADOW);
 
     if (!game.started) {
-      platformDrawText(w, h, "Shooter (Space to play)");
+      platformDrawText(w, h, "Shooter (Space to play)", true);
     } else if (game.player.life) {
-      platformDrawText(w, h, "Paused (Space to play)");
+      platformDrawText(w, h, "Paused (Space to play)", true);
     } else {
-      platformDrawText(w, h, "Game Over (Space to restart)");
+      platformDrawText(w, h, "Game Over (Space to restart)", true);
     }
   }
 }
@@ -272,7 +303,6 @@ void gameUpdate(void) {
   }
 
   game.player.velocity = vecLimit(game.player.velocity, PLAYER_SPEED);
-
   spriteMove(&game.player);
 
   if (timerReady(&game.heal)) {
@@ -335,6 +365,7 @@ void gameUpdate(void) {
       for (int j = 0; j < game.bullets.count; ++j) {
         Sprite *bullet = &game.bullets.data[j];
         if (spriteTouch(enemy, bullet, ENEMY_SIZE + BULLET_SIZE)) {
+          game.score++;
           spritesFree(&game.bullets, j);
           spritesFree(&game.enemies, i);
           break;

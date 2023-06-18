@@ -61,7 +61,7 @@ window.onload = async () => {
         ctx.fillRect(x, y, w, h)
       },
 
-      platformDrawText: (w, h, ptr) => {
+      platformDrawText: (w, h, ptr, center) => {
         const buf = wasm.instance.exports.memory.buffer
         const len = new Uint8Array(buf, ptr).indexOf(0)
         const src = new Uint8Array(buf, ptr, len)
@@ -73,7 +73,12 @@ window.onload = async () => {
         const size = ctx.measureText(text)
         const width = size.width
         const height = size.actualBoundingBoxAscent + size.actualBoundingBoxDescent
-        ctx.fillText(text, (w - width) / 2, (h - height) / 2)
+
+        if (center) {
+          ctx.fillText(text, (w - width) / 2, (h - height) / 2)
+        } else {
+          ctx.fillText(text, 10, height + 10)
+        }
       },
 
       platformDrawCircle: (x, y, r, color) => {
