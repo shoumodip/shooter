@@ -175,7 +175,7 @@ typedef struct {
 
 Game game;
 
-void gameInit(int w, int h) {
+void gameInit(void) {
   game.paused = false;
 
   game.player.life = PLAYER_LIFE;
@@ -196,8 +196,6 @@ void gameInit(int w, int h) {
 
   game.spawn.left = 0;
   game.spawn.delay = SPAWN_DELAY;
-
-  gameResize(w, h);
 }
 
 void gameRender(void) {
@@ -230,7 +228,7 @@ void gameUpdate(void) {
     if (game.player.life) {
       game.paused = !game.paused;
     } else {
-      gameInit(game.screen.x * 2, game.screen.y * 2);
+      gameInit();
     }
   }
 

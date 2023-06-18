@@ -43,7 +43,8 @@ void platformDrawCircle(int x, int y, int r, uint color) {
 }
 
 int main(void) {
-  gameInit(WIDTH, HEIGHT);
+  gameInit();
+  gameResize(WIDTH, HEIGHT);
 
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(WIDTH, HEIGHT, "Shooter");

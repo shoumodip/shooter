@@ -67,15 +67,14 @@ window.onload = async () => {
     }
   })
 
-  ctx.canvas.width = window.innerWidth
-  ctx.canvas.height = window.innerHeight
-  wasm.instance.exports.gameInit(window.innerWidth, window.innerHeight)
-
   window.onresize = () => {
     ctx.canvas.width = window.innerWidth
     ctx.canvas.height = window.innerHeight
     wasm.instance.exports.gameResize(ctx.canvas.width, ctx.canvas.height)
   }
+
+  wasm.instance.exports.gameInit()
+  window.onresize()
 
   function loop() {
     wasm.instance.exports.gameRender()

@@ -11,7 +11,7 @@ int platformKeyPressed(char key);
 void platformDrawRect(int x, int y, int w, int h, uint color);
 void platformDrawCircle(int x, int y, int r, uint color);
 
-void gameInit(int w, int h);
+void gameInit(void);
 void gameResize(int w, int h);
 void gameRender(void);
 void gameUpdate(void);
