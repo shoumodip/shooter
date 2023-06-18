@@ -1,9 +1,13 @@
 #include "game.h"
 #include <ctype.h>
 #include <raylib.h>
+#include <stdio.h>
 
 #define WIDTH 800
 #define HEIGHT 600
+#define FONT_SIZE 30
+
+Font font;
 
 Color colorFromHex(uint color) {
   return (Color){
@@ -38,6 +42,12 @@ void platformDrawRect(int x, int y, int w, int h, uint color) {
   DrawRectangle(x, y, w, h, colorFromHex(color));
 }
 
+void platformDrawText(int w, int h, const char *text) {
+  Vector2 size = MeasureTextEx(font, text, FONT_SIZE, 0);
+  Vector2 start = {(w - size.x) / 2, (h - size.y) / 2};
+  DrawTextEx(font, text, start, FONT_SIZE, 0, WHITE);
+}
+
 void platformDrawCircle(int x, int y, int r, uint color) {
   DrawCircle(x, y, r, colorFromHex(color));
 }
@@ -49,6 +59,8 @@ int main(void) {
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(WIDTH, HEIGHT, "Shooter");
   SetTargetFPS(60);
+
+  font = LoadFontEx("fonts/iosevka.ttf", 30, 0, 0);
   while (!WindowShouldClose()) {
     BeginDrawing();
     gameRender();

@@ -164,6 +164,7 @@ void spritesFree(Sprites *s, int index) {
 typedef struct {
   Vec screen;
   bool paused;
+  bool started;
   Sprite player;
   Sprites bullets;
   Sprites enemies;
@@ -176,7 +177,7 @@ typedef struct {
 Game game;
 
 void gameInit(void) {
-  game.paused = false;
+  game.paused = !game.started;
 
   game.player.life = PLAYER_LIFE;
   game.player.position = (Vec){0};
@@ -215,7 +216,17 @@ void gameRender(void) {
              PLAYER_COLOR);
 
   if (game.paused || !game.player.life) {
-    platformDrawRect(0, 0, game.screen.x * 2, game.screen.y * 2, SHADOW);
+    int w = game.screen.x * 2;
+    int h = game.screen.y * 2;
+    platformDrawRect(0, 0, w, h, SHADOW);
+
+    if (!game.started) {
+      platformDrawText(w, h, "Shooter (Space to play)");
+    } else if (game.player.life) {
+      platformDrawText(w, h, "Paused (Space to play)");
+    } else {
+      platformDrawText(w, h, "Game Over (Space to restart)");
+    }
   }
 }
 
@@ -227,6 +238,7 @@ void gameUpdate(void) {
   if (platformKeyPressed(' ')) {
     if (game.player.life) {
       game.paused = !game.paused;
+      game.started = true;
     } else {
       gameInit();
     }
