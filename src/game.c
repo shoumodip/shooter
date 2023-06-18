@@ -215,6 +215,11 @@ void gameRender(void) {
   spriteDraw(&game.player, game.player.position, game.screen, PLAYER_SIZE,
              PLAYER_COLOR);
 
+  for (int i = 0; i < game.player.life; ++i) {
+    platformDrawCircle(BULLET_SIZE * (i * 3 + 2), BULLET_SIZE * 2, BULLET_SIZE,
+                       PLAYER_COLOR);
+  }
+
   if (game.paused || !game.player.life) {
     int w = game.screen.x * 2;
     int h = game.screen.y * 2;
