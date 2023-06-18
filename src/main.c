@@ -30,6 +30,10 @@ int platformKeyDown(char key) {
   return IsKeyDown(toupper(key));
 }
 
+int platformKeyPressed(char key) {
+  return IsKeyPressed(toupper(key));
+}
+
 void platformDrawRect(int x, int y, int w, int h, uint color) {
   DrawRectangle(x, y, w, h, colorFromHex(color));
 }

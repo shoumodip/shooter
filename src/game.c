@@ -1,5 +1,5 @@
 #include "game.h"
-#include <stddef.h>
+#include <stdbool.h>
 
 #define RAND_A 6364136223846793005ULL
 #define RAND_C 1442695040888963407ULL
@@ -25,6 +25,7 @@ static float sqrtf(float a) {
   return x;
 }
 
+#define SHADOW 0x000000AA
 #define BACKGROUND 0x2C2C2CFF
 
 #define ENEMY_SIZE 25
@@ -162,6 +163,7 @@ void spritesFree(Sprites *s, int index) {
 
 typedef struct {
   Vec screen;
+  bool paused;
   Sprite player;
   Sprites bullets;
   Sprites enemies;
@@ -174,6 +176,8 @@ typedef struct {
 Game game;
 
 void gameInit(int w, int h) {
+  game.paused = false;
+
   game.player.life = PLAYER_LIFE;
   game.player.position = (Vec){0};
   game.player.velocity = (Vec){0};
@@ -211,6 +215,10 @@ void gameRender(void) {
 
   spriteDraw(&game.player, game.player.position, game.screen, PLAYER_SIZE,
              PLAYER_COLOR);
+
+  if (game.paused || !game.player.life) {
+    platformDrawRect(0, 0, game.screen.x * 2, game.screen.y * 2, SHADOW);
+  }
 }
 
 void gameResize(int w, int h) {
@@ -218,7 +226,15 @@ void gameResize(int w, int h) {
 }
 
 void gameUpdate(void) {
-  if (!game.player.life) {
+  if (platformKeyPressed(' ')) {
+    if (game.player.life) {
+      game.paused = !game.paused;
+    } else {
+      gameInit(game.screen.x * 2, game.screen.y * 2);
+    }
+  }
+
+  if (game.paused || !game.player.life) {
     return;
   }
 

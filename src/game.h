@@ -7,6 +7,7 @@ int platformMouseX(void);
 int platformMouseY(void);
 int platformClicked(void);
 int platformKeyDown(char key);
+int platformKeyPressed(char key);
 void platformDrawRect(int x, int y, int w, int h, uint color);
 void platformDrawCircle(int x, int y, int r, uint color);
 

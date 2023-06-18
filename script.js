@@ -9,9 +9,16 @@ window.onload = async () => {
   const app = document.getElementById("app")
   const ctx = app.getContext("2d")
 
-  const keys = new Set()
-  window.onkeyup = (e) => keys.delete(e.key)
-  window.onkeydown = (e) => keys.add(e.key)
+  const keys = { down: new Set(), pressed: new Set() }
+  window.onkeyup = (e) => {
+    keys.pressed.add(e.key)
+    keys.down.delete(e.key)
+  }
+
+  window.onkeydown = (e) => {
+    keys.down.add(e.key)
+    keys.pressed.delete(e.key)
+  }
 
   let mouse = { x: 0, y: 0 }
   let clicked = false
@@ -34,7 +41,16 @@ window.onload = async () => {
       },
 
       platformKeyDown: (key) => {
-        return keys.has(String.fromCharCode(key))
+        return keys.down.has(String.fromCharCode(key))
+      },
+
+      platformKeyPressed: (key) => {
+        const ch = String.fromCharCode(key)
+        if (keys.pressed.has(ch)) {
+          keys.pressed.delete(ch)
+          return true
+        }
+        return false
       },
 
       platformDrawRect: (x, y, w, h, color) => {
