@@ -65,7 +65,7 @@ int main(void) {
   InitWindow(WIDTH, HEIGHT, "Shooter");
   SetTargetFPS(60);
 
-  font = LoadFontEx("fonts/iosevka.ttf", 30, 0, 0);
+  font = LoadFontEx("assets/iosevka.ttf", 30, 0, 0);
   while (!WindowShouldClose()) {
     BeginDrawing();
     gameRender();

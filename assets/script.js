@@ -3,7 +3,7 @@ function colorFromHex(color) {
 }
 
 window.onload = async () => {
-  const font = await new FontFace("Iosevka", "url(fonts/iosevka.ttf)").load()
+  const font = await new FontFace("Iosevka", "url(assets/iosevka.ttf)").load()
   document.fonts.add(font)
 
   document.body.style.margin = 0
@@ -29,7 +29,7 @@ window.onload = async () => {
   window.onmousedown = () => clicked = true
   window.onmousemove = (e) => mouse = { x: e.offsetX, y: e.offsetY }
 
-  const wasm = await WebAssembly.instantiateStreaming(fetch("shooter.wasm"), {
+  const wasm = await WebAssembly.instantiateStreaming(fetch("assets/shooter.wasm"), {
     env: {
       platformMouseX: () => {
         return mouse.x
