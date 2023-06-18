@@ -44,7 +44,7 @@ void platformDrawRect(int x, int y, int w, int h, uint color) {
 
 void platformDrawText(int w, int h, const char *text) {
   Vector2 size = MeasureTextEx(font, text, FONT_SIZE, 0);
-  Vector2 start = {(w - size.x) / 2, (h - size.y) / 2};
+  Vector2 start = {(w - size.x) / 2.0, h / 2.0 - size.y};
   DrawTextEx(font, text, start, FONT_SIZE, 0, WHITE);
 }
 
