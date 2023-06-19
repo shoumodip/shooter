@@ -9,7 +9,7 @@ int platformClicked(void);
 int platformKeyDown(char key);
 int platformKeyPressed(char key);
 void platformDrawRect(int x, int y, int w, int h, uint color);
-void platformDrawText(int w, int h, const char *text, int center);
+void platformDrawText(int x, int y, int size, const char *text, uint color);
 void platformDrawCircle(int x, int y, int r, uint color);
 
 void gameInit(void);

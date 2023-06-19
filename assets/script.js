@@ -3,7 +3,7 @@ function colorFromHex(color) {
 }
 
 window.onload = async () => {
-  const font = await new FontFace("Iosevka", "url(assets/iosevka.ttf)").load()
+  const font = await new FontFace("Iosevka", "url(assets/november.ttf)").load()
   document.fonts.add(font)
 
   document.body.style.margin = 0
@@ -61,24 +61,19 @@ window.onload = async () => {
         ctx.fillRect(x, y, w, h)
       },
 
-      platformDrawText: (w, h, ptr, center) => {
+      platformDrawText: (x, y, size, ptr, color) => {
         const buf = wasm.instance.exports.memory.buffer
         const len = new Uint8Array(buf, ptr).indexOf(0)
         const src = new Uint8Array(buf, ptr, len)
         const text = new TextDecoder().decode(src)
 
-        ctx.font = "30px Iosevka"
-        ctx.fillStyle = "white"
+        ctx.font = size + "px Iosevka"
+        ctx.fillStyle = colorFromHex(color)
 
-        const size = ctx.measureText(text)
-        const width = size.width
-        const height = size.actualBoundingBoxAscent + size.actualBoundingBoxDescent
+        const metrics = ctx.measureText(text)
+        const offset = (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
 
-        if (center) {
-          ctx.fillText(text, (w - width) / 2, (h - height) / 2)
-        } else {
-          ctx.fillText(text, 10, height + 10)
-        }
+        ctx.fillText(text, x, y + offset)
       },
 
       platformDrawCircle: (x, y, r, color) => {

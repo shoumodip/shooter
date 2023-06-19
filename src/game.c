@@ -27,6 +27,14 @@ static const char *itoa(char *buf, int n) {
   return buf;
 }
 
+static int strlen(const char *src) {
+  int n = 0;
+  while (src[n] != '\0') {
+    n++;
+  }
+  return n;
+}
+
 #define RAND_A 6364136223846793005ULL
 #define RAND_C 1442695040888963407ULL
 
@@ -51,7 +59,14 @@ static float sqrtf(float a) {
   return x;
 }
 
+#define SCORE_HEIGHT 25
+#define SCORE_WIDTH ((int)(SCORE_HEIGHT * 0.5))
+
+#define TITLE_HEIGHT 35
+#define TITLE_WIDTH ((int)(TITLE_HEIGHT * 0.5))
+
 #define SHADOW 0x000000AA
+#define FOREGROUND 0xD8A657FF
 #define BACKGROUND 0x2C2C2CFF
 
 #define ENEMY_SIZE 25
@@ -244,7 +259,8 @@ void gameRender(void) {
              PLAYER_COLOR);
 
   char score[32];
-  platformDrawText(0, 0, itoa(score, game.score), false);
+  platformDrawText(SCORE_WIDTH, SCORE_HEIGHT * 0.4, SCORE_HEIGHT,
+                   itoa(score, game.score), FOREGROUND);
 
   for (int i = 0; i < game.player.life; ++i) {
     platformDrawCircle(BULLET_SIZE * (i * 3 + 2), BULLET_SIZE * 5, BULLET_SIZE,
@@ -256,13 +272,18 @@ void gameRender(void) {
     int h = game.screen.y * 2;
     platformDrawRect(0, 0, w, h, SHADOW);
 
+    const char *text = "Paused (Space to play)";
     if (!game.started) {
-      platformDrawText(w, h, "Shooter (Space to play)", true);
-    } else if (game.player.life) {
-      platformDrawText(w, h, "Paused (Space to play)", true);
-    } else {
-      platformDrawText(w, h, "Game Over (Space to restart)", true);
+      text = "Shooter (Space to play)";
     }
+
+    if (!game.player.life) {
+      text = "Game Over (Space to restart)";
+    }
+
+    int x = (w - TITLE_WIDTH * strlen(text)) / 2;
+    int y = h / 2 - TITLE_HEIGHT;
+    platformDrawText(x, y, TITLE_HEIGHT, text, FOREGROUND);
   }
 }
 
