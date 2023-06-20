@@ -39,6 +39,10 @@ window.onload = async () => {
     mouse.y = e.offsetY
   }
 
+  window.onpointerup = window.onmouseup
+  window.onpointerdown = window.onmousedown
+  window.onpointermove = window.onmousemove
+
   const wasm = await WebAssembly.instantiateStreaming(fetch("assets/shooter.wasm"), {
     env: {
       platformMouseX: () => {
