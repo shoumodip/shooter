@@ -5,7 +5,8 @@ typedef unsigned int uint;
 
 int platformMouseX(void);
 int platformMouseY(void);
-int platformClicked(void);
+int platformMouseDown(void);
+int platformMousePressed(void);
 int platformKeyDown(char key);
 int platformKeyPressed(char key);
 void platformDrawRect(int x, int y, int w, int h, uint color);

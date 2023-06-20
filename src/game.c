@@ -292,6 +292,16 @@ void gameResize(int w, int h) {
 }
 
 void gameUpdate(void) {
+  if (platformMousePressed() && (game.paused || !game.player.life)) {
+    if (game.player.life) {
+      game.paused = !game.paused;
+      game.started = true;
+    } else {
+      gameInit();
+    }
+    return;
+  }
+
   if (platformKeyPressed(' ')) {
     if (game.player.life) {
       game.paused = !game.paused;
@@ -334,7 +344,7 @@ void gameUpdate(void) {
   }
 
   if (timerReady(&game.shoot)) {
-    if (platformClicked()) {
+    if (platformMouseDown()) {
       Vec mouse = {platformMouseX(), platformMouseY()};
       Vec target = vecSub(mouse, game.screen);
       target = vecLimit(target, BULLET_SPEED);

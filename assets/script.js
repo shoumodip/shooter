@@ -23,11 +23,21 @@ window.onload = async () => {
     keys.pressed.delete(e.key)
   }
 
-  let mouse = { x: 0, y: 0 }
-  let clicked = false
-  window.onmouseup = () => clicked = false
-  window.onmousedown = () => clicked = true
-  window.onmousemove = (e) => mouse = { x: e.offsetX, y: e.offsetY }
+  let mouse = { x: 0, y: 0, down: false, pressed: false }
+  window.onmouseup = () => {
+    mouse.pressed = true
+    mouse.down = false
+  }
+
+  window.onmousedown = () => {
+    mouse.down = true
+    mouse.pressed = false
+  }
+
+  window.onmousemove = (e) => {
+    mouse.x = e.offsetX
+    mouse.y = e.offsetY
+  }
 
   const wasm = await WebAssembly.instantiateStreaming(fetch("assets/shooter.wasm"), {
     env: {
@@ -39,8 +49,16 @@ window.onload = async () => {
         return mouse.y
       },
 
-      platformClicked: () => {
-        return clicked
+      platformMouseDown: () => {
+        return mouse.down
+      },
+
+      platformMousePressed: () => {
+        if (mouse.pressed) {
+          mouse.pressed = false
+          return true
+        }
+        return false
       },
 
       platformKeyDown: (key) => {

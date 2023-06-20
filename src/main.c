@@ -24,8 +24,12 @@ int platformMouseY(void) {
   return GetMouseY();
 }
 
-int platformClicked(void) {
+int platformMouseDown(void) {
   return IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+}
+
+int platformMousePressed(void) {
+  return IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
 }
 
 int platformKeyDown(char key) {
